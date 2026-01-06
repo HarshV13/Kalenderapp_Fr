@@ -4,17 +4,14 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  # Skip secret scanning for public Supabase keys (they are meant to be public)
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# Scheduled function for cleanup at midnight Europe/Berlin
+# Functions configuration
 [functions]
   directory = "netlify/functions"
 
-[[edge_functions]]
-  path = "/api/*"
-  function = "middleware"
-
-# Scheduled cleanup job - runs daily at midnight Europe/Berlin (23:00 UTC in winter, 22:00 UTC in summer)
-# Note: Netlify uses UTC, so we use 23:00 UTC as approximation for 00:00 CET
+# Scheduled cleanup job - runs daily at midnight Europe/Berlin (23:00 UTC)
