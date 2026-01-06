@@ -25,6 +25,7 @@ export default function TimeSlotPicker({
         return format(date, 'EEEE, d. MMMM yyyy', { locale: de });
     }, [selectedDate]);
 
+    // Only show available slots
     const availableSlots = slots.filter((s) => s.available);
     const hasSlots = availableSlots.length > 0;
 
@@ -58,22 +59,15 @@ export default function TimeSlotPicker({
                 </div>
             </div>
 
-            {/* Legend */}
-            <div className="flex justify-center gap-4 text-xs">
-                <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 rounded bg-[var(--slot-free)]"></div>
-                    <span>Frei</span>
-                </div>
-                <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 rounded bg-[var(--slot-reserved)]"></div>
-                    <span>Reserviert</span>
-                </div>
-            </div>
+            {/* Info text */}
+            <p className="text-center text-sm text-gray-500">
+                {availableSlots.length} freie Termine verfügbar
+            </p>
 
-            {/* Time slots grid */}
+            {/* Time slots grid - only available slots */}
             {hasSlots ? (
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                    {slots.map((slot) => {
+                    {availableSlots.map((slot) => {
                         const time = parseISO(slot.time);
                         const timeStr = format(time, 'HH:mm');
                         const isSelected = slot.time === selectedTime;
@@ -81,18 +75,8 @@ export default function TimeSlotPicker({
                         return (
                             <button
                                 key={slot.time}
-                                onClick={() => slot.available && onSelect(slot.time)}
-                                disabled={!slot.available}
-                                className={`
-                  ${isSelected
-                                        ? 'slot-free selected'
-                                        : slot.status === 'free'
-                                            ? 'slot-free'
-                                            : slot.status === 'reserved'
-                                                ? 'slot-reserved'
-                                                : 'slot-blocked'
-                                    }
-                `}
+                                onClick={() => onSelect(slot.time)}
+                                className={`slot-free ${isSelected ? 'selected' : ''}`}
                             >
                                 {timeStr}
                             </button>
