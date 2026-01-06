@@ -1,0 +1,20 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Scheduled function for cleanup at midnight Europe/Berlin
+[functions]
+  directory = "netlify/functions"
+
+[[edge_functions]]
+  path = "/api/*"
+  function = "middleware"
+
+# Scheduled cleanup job - runs daily at midnight Europe/Berlin (23:00 UTC in winter, 22:00 UTC in summer)
+# Note: Netlify uses UTC, so we use 23:00 UTC as approximation for 00:00 CET
