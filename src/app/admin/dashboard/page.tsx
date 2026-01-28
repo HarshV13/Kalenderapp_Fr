@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { format, parseISO, isToday, isTomorrow, startOfDay, addDays } from 'date-fns';
+import { format, parseISO, isToday, isTomorrow, startOfDay, endOfDay, addDays } from 'date-fns';
 import { de } from 'date-fns/locale';
 import AppointmentCard from './components/AppointmentCard';
 import BlockSlotModal from './components/BlockSlotModal';
@@ -215,8 +215,8 @@ export default function AdminDashboard() {
         if (activeTab === 'all') {
             let filtered = appointments.filter((a) => {
                 const date = parseISO(a.start_at);
-                const from = parseISO(allDateFrom);
-                const to = parseISO(allDateTo);
+                const from = startOfDay(parseISO(allDateFrom));
+                const to = endOfDay(parseISO(allDateTo));
                 return date >= from && date <= to;
             });
 
